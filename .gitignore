@@ -1,0 +1,11 @@
+venv/
+__pycache__/
+*.pyc
+.env
+node_modules/
+tailwind.css
+output.css
+*.log
+*.sqlite3
+*.db
+*.DS_Store

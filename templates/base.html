@@ -1,0 +1,97 @@
+<!--base.html-->>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}Remote Job Board{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/output.css') }}">
+</head>
+
+<body class="bg-gray-50 text-gray-800 font-sans">
+
+  <!-- ✅ Navigation Bar -->
+  <header class="bg-white shadow sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+      <a href="{{ url_for('jobs.home') }}" class="text-xl font-bold text-blue-600">🌐 Remote Job Board</a>
+      <nav class="text-sm space-x-4">
+        {% if current_user.is_authenticated %}
+          <span class="text-gray-600">👋 {{ current_user.email }}</span>
+          <a href="{{ url_for('subscriptions.send_alert') }}" class="text-blue-500 hover:underline">Alerts</a>
+          <a href="{{ url_for('dashboard.dashboard') }}" class="text-blue-500 hover:underline">Dashboard</a>
+          <a href="{{ url_for('auth.logout_user_route') }}" class="text-red-500 hover:underline">Logout</a>
+        {% else %}
+          <a href="{{ url_for('auth.login_user_route') }}" class="text-blue-500 hover:underline">Login</a>
+          <a href="{{ url_for('auth.register_user') }}" class="text-blue-500 hover:underline">Register</a>
+        {% endif %}
+      </nav>
+    </div>
+  </header>
+
+  <!-- ✅ Flash Messages -->
+  <div class="max-w-3xl mx-auto p-4">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="space-y-2">
+          {% for category, message in messages %}
+            <div class="p-3 rounded text-white text-sm 
+              {% if category == 'danger' %}bg-red-500
+              {% elif category == 'success' %}bg-green-500
+              {% elif category == 'info' %}bg-blue-500
+              {% else %}bg-gray-500{% endif %}">
+              {{ message }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+  </div>
+
+  <!-- ✅ Main Content Area -->
+  <main class="max-w-7xl mx-auto px-4 py-10">
+    {% if request.endpoint == "paginated_jobs_route" %}
+      <!-- Job search and listings go here -->
+      {% block job_listings %}{% endblock %}
+    {% else %}
+      {% block content %}{% endblock %}
+    {% endif %}
+  </main>
+
+  <!-- ✅ Footer -->
+  <footer class="text-center text-gray-500 text-sm py-8 border-t mt-10">
+    &copy; {{ current_year | default(2025) }} Remote Job Notifier. All rights reserved.
+  </footer>
+
+  <!-- ✅ Scripts -->
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+  {% if trend_labels is defined and trend_values is defined %}
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    const ctx = document.getElementById("trendChart")?.getContext("2d");
+    if (ctx) {
+      new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: {{ trend_labels | tojson }},
+          datasets: [{
+            label: "Jobs Posted",
+            data: {{ trend_values | tojson }},
+            borderColor: "rgb(59, 130, 246)",
+            backgroundColor: "rgba(59, 130, 246, 0.2)",
+            fill: true,
+            tension: 0.3
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: { beginAtZero: true }
+          }
+        }
+      });
+    }
+  </script>
+  {% endif %}
+</body>
+</html>

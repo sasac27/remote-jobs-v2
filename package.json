@@ -1,0 +1,73 @@
+{
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.1.10",
+    "@tailwindcss/line-clamp": "^0.4.4",
+    "@tailwindcss/typography": "^0.5.16",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.17"
+  },
+  "name": "remote_jobs",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:css": "tailwindcss -i ./input.css -o ./output.css --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sasac27/job-notifier.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sasac27/job-notifier/issues"
+  },
+  "homepage": "https://github.com/sasac27/job-notifier#readme",
+  "dependencies": {
+    "braces": "^3.0.3",
+    "browserslist": "^4.25.0",
+    "caniuse-lite": "^1.0.30001724",
+    "chownr": "^3.0.0",
+    "cssesc": "^3.0.0",
+    "detect-libc": "^1.0.3",
+    "electron-to-chromium": "^1.5.171",
+    "enhanced-resolve": "^5.18.1",
+    "escalade": "^3.2.0",
+    "fill-range": "^7.1.1",
+    "fraction.js": "^4.3.7",
+    "graceful-fs": "^4.2.11",
+    "is-extglob": "^2.1.1",
+    "is-glob": "^4.0.3",
+    "is-number": "^7.0.0",
+    "jiti": "^2.4.2",
+    "lightningcss": "^1.30.1",
+    "lightningcss-linux-x64-gnu": "^1.30.1",
+    "lodash.castarray": "^4.4.0",
+    "lodash.isplainobject": "^4.0.6",
+    "lodash.merge": "^4.6.2",
+    "magic-string": "^0.30.17",
+    "micromatch": "^4.0.8",
+    "minipass": "^7.1.2",
+    "minizlib": "^3.0.2",
+    "mkdirp": "^3.0.1",
+    "mri": "^1.2.0",
+    "nanoid": "^3.3.11",
+    "node-addon-api": "^7.1.1",
+    "node-releases": "^2.0.19",
+    "normalize-range": "^0.1.2",
+    "picocolors": "^1.1.1",
+    "picomatch": "^2.3.1",
+    "postcss-selector-parser": "^6.0.10",
+    "postcss-value-parser": "^4.2.0",
+    "source-map-js": "^1.2.1",
+    "tapable": "^2.2.2",
+    "tar": "^7.4.3",
+    "to-regex-range": "^5.0.1",
+    "update-browserslist-db": "^1.1.3",
+    "util-deprecate": "^1.0.2",
+    "yallist": "^5.0.0"
+  },
+  "description": ""
+}

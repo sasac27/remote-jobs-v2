@@ -1,0 +1,16 @@
+/* input.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Force some common classes to be included */
+@layer utilities {
+  .bg-gray-50 {}
+  .text-red-600 {}
+  .text-blue-600 {}
+  .hover\:underline {}
+  .rounded-lg {}
+  .shadow-md {}
+  .px-6 {}
+  .py-4 {}
+}
