@@ -1,6 +1,6 @@
 # app.py
 
-from flask import Flask, jsonify
+from flask import Flask, jsonify, redirect, url_for
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_apscheduler import APScheduler
@@ -56,7 +56,7 @@ def create_app():
 
     @app.route("/")
     def index():
-        return ("Remote Jobs API is live!")
+        return redirect(url_for("api.api_get_jobs"))
     
     @app.before_request
     def log_request_headers():
