@@ -13,13 +13,13 @@ import os
 import logging
 
 from backend.models import Base, engine, SessionLocal, User
-from config import Config
-from routes import register_routes
-from routes.api_auth import api_auth_bp
-from routes.subscriptions import sub_bp
-from routes.jobs import jobs_bp
-from routes.dashboard import dashboard_bp
-from api.jobs.tasks import fetch_and_store_jobs
+from backend.config import Config
+from backend.routes import register_routes
+from backend.routes.api_auth import api_auth_bp
+from backend.routes.subscriptions import sub_bp
+from backend.routes.jobs import jobs_bp
+from backend.routes.dashboard import dashboard_bp
+from backend.api.jobs.tasks import fetch_and_store_jobs
 
 # Load environment variables
 load_dotenv()
