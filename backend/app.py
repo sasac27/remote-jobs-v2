@@ -97,4 +97,6 @@ def inject_now():
 
 # Run server
 if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
+    fetch_and_store_jobs()
     app.run(debug=True)

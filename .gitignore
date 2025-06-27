@@ -9,3 +9,4 @@ output.css
 *.sqlite3
 *.db
 *.DS_Store
+.env

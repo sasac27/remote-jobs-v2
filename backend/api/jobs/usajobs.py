@@ -4,12 +4,16 @@ from dateutil.parser import parse as parse_date
 from utils.utils import extract_tags
 from hashlib import sha256
 import time
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
 API_URL = "https://data.usajobs.gov/api/search"
 HEADERS = {
     "Host": "data.usajobs.gov",
-    "User-Agent": "aaroncasas27@outlook.com",  # Replace with a real contact email
-    "Authorization-Key": "C/yGpnD4fOfQ/nxNZ9MJCTCQra3NbYOD6GrQk7/90Dw="  # Store in env if needed
+    "User-Agent": os.getenv("USAJOBS_USER_AGENT"),
+    "Authorization-Key": os.getenv("USAJOBS_API_KEY")
+    
 }
 
 BROAD_KEYWORDS = [
