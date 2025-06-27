@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 import os
 import logging
 
-from models import Base, engine, SessionLocal, User
+from backend.models import Base, engine, SessionLocal, User
 from config import Config
 from routes import register_routes
 from routes.api_auth import api_auth_bp
