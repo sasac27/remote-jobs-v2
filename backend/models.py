@@ -6,7 +6,11 @@ from sqlalchemy.sql import func
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
 from flask_login import UserMixin
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite://local.db")
 Base = declarative_base()
 
 # --------------------------
@@ -82,5 +86,5 @@ class JobPost(Base):
 # --------------------------
 # DB Engine and Session
 # --------------------------
-engine = create_engine('postgresql://jobuser:2600@localhost/jobsdb')
+engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(bind=engine)
