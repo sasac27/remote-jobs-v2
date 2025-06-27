@@ -1,8 +1,8 @@
-from models import SessionLocal, JobPost
-from api.jobs.adzuna import get_all_adzuna_jobs
-from api.jobs.remotive import get_remotive_jobs
-from api.jobs.usajobs import get_usajobs_jobs, normalize_usajobs, deduplicate_usajobs
-from utils.utils import normalize_job
+from backend.models import SessionLocal, JobPost
+from backend.api.jobs.adzuna import get_all_adzuna_jobs
+from backend.api.jobs.remotive import get_remotive_jobs
+from backend.api.jobs.usajobs import get_usajobs_jobs, normalize_usajobs, deduplicate_usajobs
+from backend.utils.utils import normalize_job
 from hashlib import sha256
 from collections import Counter
 import traceback

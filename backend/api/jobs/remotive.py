@@ -1,7 +1,7 @@
 import requests
 from datetime import datetime
 from dateutil.parser import parse as parse_date
-from utils.utils import extract_tags
+from backend.utils.utils import extract_tags
 from hashlib import sha256
 import time
 from requests.adapters import HTTPAdapter
@@ -55,7 +55,7 @@ def fetch_remotive_data(retries=3, delay=2):
         print(f"[Remotive] ❌ Failed to fetch jobs: {e}")
         return {}
     
-    
+
 def get_remotive_jobs():
     data = fetch_remotive_data()
     jobs = []

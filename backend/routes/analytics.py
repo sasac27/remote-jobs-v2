@@ -1,7 +1,7 @@
 # routes/analytics.py
 from flask import Blueprint, jsonify
 from sqlalchemy import func, desc, cast, Date
-from models import SessionLocal, JobPost, Subscription
+from backend.models import SessionLocal, JobPost, Subscription
 
 analytics_bp = Blueprint("analytics", __name__)
 

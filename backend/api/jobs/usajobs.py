@@ -1,7 +1,7 @@
 import requests
 from datetime import datetime
 from dateutil.parser import parse as parse_date
-from utils.utils import extract_tags
+from backend.utils.utils import extract_tags
 from hashlib import sha256
 import time
 import os

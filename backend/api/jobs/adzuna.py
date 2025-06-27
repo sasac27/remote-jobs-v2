@@ -1,7 +1,7 @@
 import requests
 import os
 from dotenv import load_dotenv
-from utils.utils import extract_tags
+from backend.utils.utils import extract_tags
 from hashlib import sha256
 from datetime import datetime
 import time
