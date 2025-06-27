@@ -42,7 +42,7 @@ def create_app():
     limiter.init_app(app)
 
     #Load CORS origin
-    ALLOWED_ORIGIN = os.getenv("CORS_ORIGIN", "http://localhost:4200")
+    ALLOWED_ORIGIN = os.getenv("CORS_ORIGIN", "https://remote-jobs-v2-1.onrender.com")
 
     # Enable CORS for frontend requests (Angular)
     CORS(app, supports_credentials=True, origins=[ALLOWED_ORIGIN])
@@ -54,7 +54,10 @@ def create_app():
     csrf.exempt(jobs_bp)
     csrf.exempt(dashboard_bp)
 
-
+    @app.route("/")
+    def index():
+        return ("Remote Jobs API is live!")
+    
     @app.before_request
     def log_request_headers():
         from flask import request

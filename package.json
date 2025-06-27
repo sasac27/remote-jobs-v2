@@ -11,9 +11,13 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build:css": "tailwindcss -i ./input.css -o ./output.css --watch"
-  },
+  "ng": "ng",
+  "start": "ng serve",
+  "build": "ng build",
+  "watch": "ng build --watch --configuration development",
+  "test": "ng test"
+}
+,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sasac27/job-notifier.git"
