@@ -1,7 +1,7 @@
 # routes/jobs.py
 
 from flask import Blueprint, request, jsonify
-from models import SessionLocal, JobPost
+from backend.models import SessionLocal, JobPost
 from sqlalchemy import func
 from sqlalchemy import or_, and_
 import math

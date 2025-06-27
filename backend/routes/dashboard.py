@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask_cors import cross_origin
-from models import SessionLocal, JobPost
+from backend.models import SessionLocal, JobPost
 from sqlalchemy import func
 from collections import Counter, defaultdict
 from datetime import datetime, timedelta

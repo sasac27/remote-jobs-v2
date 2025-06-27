@@ -2,7 +2,7 @@
 
 from flask import Blueprint, jsonify, render_template, request, flash, redirect, url_for
 from flask_login import login_required, current_user
-from models import SessionLocal, Subscription, User
+from backend.models import SessionLocal, Subscription, User
 from api.jobs.remotive import get_remotive_jobs
 import os
 import smtplib
