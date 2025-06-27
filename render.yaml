@@ -3,7 +3,7 @@ services:
     name: remote-job-backend
     env: python
     buildCommand: ""
-    startCommand: gunicorn app:app
+    startCommand: gunicorn backend.app:app
     envVars:
       - key: FLASK_ENV
         value: production
