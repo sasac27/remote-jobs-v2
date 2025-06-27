@@ -59,7 +59,7 @@ def create_app():
 
     @app.route("/")
     def index():
-        return redirect(url_for("/api/jobs"))
+        return redirect(url_for("api.api_get_jobs"))
     
     @app.before_request
     def log_request_headers():
