@@ -54,9 +54,12 @@ def create_app():
     csrf.exempt(jobs_bp)
     csrf.exempt(dashboard_bp)
 
+    # Register all route blueprints
+    register_routes(app)
+
     @app.route("/")
     def index():
-        return redirect(url_for("api.api_get_jobs"))
+        return redirect(url_for("/api/jobs"))
     
     @app.before_request
     def log_request_headers():
@@ -66,10 +69,8 @@ def create_app():
         print("Path:", request.path)
         for header, value in request.headers.items():
             print(f"{header}: {value}")
-
-    # Register all route blueprints
-    register_routes(app)
-
+            
+    
     return app
 
 # Initialize app
