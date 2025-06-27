@@ -1,0 +1,19 @@
+<header class="bg-white shadow sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+    <a routerLink="/" class="text-xl font-bold text-blue-600">🌐 Remote Job Board</a>
+
+    <nav class="space-x-4 text-sm">
+      <ng-container *ngIf="auth.isLoggedIn(); else guest">
+        <span class="text-gray-600">👋 {{ userEmail }}</span>
+        <a routerLink="/subscribe" class="text-blue-600 hover:underline">🔔 Subscriptions</a>
+        <a routerLink="/dashboard" class="text-blue-600 hover:underline">Dashboard</a>
+        <button (click)="logout()" class="text-red-500 hover:underline">Logout</button>
+      </ng-container>
+
+      <ng-template #guest>
+        <a routerLink="/login" class="text-blue-600 hover:underline">Login</a>
+        <a routerLink="/register" class="text-blue-600 hover:underline">Register</a>
+      </ng-template>
+    </nav>
+  </div>
+</header>

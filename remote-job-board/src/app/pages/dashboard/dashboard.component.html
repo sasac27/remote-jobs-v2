@@ -1,0 +1,65 @@
+<div class="max-w-6xl mx-auto px-4 py-8 space-y-10">
+  <h2 class="text-2xl font-bold text-gray-800 mb-4">📊 Job Analytics Dashboard</h2>
+
+  <!-- Summary Cards -->
+  <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="bg-white p-4 rounded-2xl shadow hover:shadow-md transition">
+      <p class="text-sm text-gray-700">Total Jobs</p>
+      <p class="text-xl font-semibold">{{ totalJobs }}</p>
+    </div>
+    <div class="bg-white p-4 rounded-2xl shadow hover:shadow-md transition">
+      <p class="text-sm text-gray-700">Avg. Salary</p>
+      <p class="text-xl font-semibold">{{ averageSalary | currency }}</p>
+    </div>
+    <div class="bg-white p-4 rounded-2xl shadow hover:shadow-md transition">
+      <p class="text-sm text-gray-700">Jobs This Week</p>
+      <p class="text-xl font-semibold">{{ recentWeekCount }}</p>
+    </div>
+    <div class="bg-white p-4 rounded-2xl shadow hover:shadow-md transition">
+      <p class="text-sm text-gray-700">Jobs This Month</p>
+      <p class="text-xl font-semibold">{{ recentMonthCount }}</p>
+    </div>
+  </section>
+
+  <!-- 📈 Analytics Charts -->
+<section class="grid gap-10">
+  <!-- Top Categories -->
+  <div class="bg-white rounded-2xl shadow-md p-6 border border-gray-100">
+    <h3 class="text-xl font-bold text-gray-900 mb-4">📊 Top Categories</h3>
+    <div class="h-64">
+      <canvas baseChart [data]="categoriesChartData" [options]="chartOptions" [type]="'bar'"></canvas>
+    </div>
+  </div>
+
+  <!-- Salary Coverage & Job Type -->
+  <div class="grid md:grid-cols-2 gap-8">
+    <div class="bg-white rounded-2xl shadow-md p-6 border border-gray-100">
+      <h3 class="text-xl font-bold text-gray-900 mb-4">💼 Salary Coverage</h3>
+      <div class="h-64">
+        <canvas baseChart [data]="salaryCoverageData" [options]="chartOptions" [type]="'pie'"></canvas>
+      </div>
+    </div>
+    <div class="bg-white rounded-2xl shadow-md p-6 border border-gray-100">
+      <h3 class="text-xl font-bold text-gray-900 mb-4">🧾 Job Type Distribution</h3>
+      <div class="h-64">
+        <canvas baseChart [data]="jobTypeChartData" [options]="chartOptions" [type]="'pie'"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Salary Distribution -->
+  <div class="bg-white rounded-2xl shadow-md p-6 border border-gray-100">
+    <h3 class="text-xl font-bold text-gray-900 mb-4">💰 Salary Distribution</h3>
+    <div class="h-64">
+      <canvas baseChart [data]="salaryHistogramData" [options]="chartOptions" [type]="'bar'"></canvas>
+    </div>
+  </div>
+
+  <!-- Job Trend -->
+  <div class="bg-white rounded-2xl shadow-md p-6 border border-gray-100">
+    <h3 class="text-xl font-bold text-gray-900 mb-4">📈 Job Posting Trend</h3>
+    <div class="h-64">
+      <canvas baseChart [data]="trendData" [options]="chartOptions" [type]="'line'"></canvas>
+    </div>
+  </div>
+</section>

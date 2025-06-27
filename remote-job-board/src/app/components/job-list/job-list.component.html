@@ -1,0 +1,58 @@
+<!-- src/app/pages/job-list/job-list.component.html -->
+
+<!-- Loading & Empty States -->
+<p *ngIf="isLoading" class="text-center text-gray-500 my-8 text-lg">⏳ Loading jobs...</p>
+<p *ngIf="!isLoading && jobs.length === 0" class="text-center text-red-500 my-8 text-lg">🚫 No jobs found.</p>
+
+<!-- Search & Filters -->
+<form (ngSubmit)="onSearch()" class="grid md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
+  <input [(ngModel)]="category" name="category" placeholder="Category" class="input-style" />
+  <input [(ngModel)]="location" name="location" placeholder="Location" class="input-style" />
+  <input [(ngModel)]="keyword" name="keyword" placeholder="Keyword" class="input-style" />
+  <select [(ngModel)]="source" name="source" class="input-style">
+    <option value="">All Sources</option>
+    <option value="adzuna">Adzuna</option>
+    <option value="remotive">Remotive</option>
+    <option value="usajobs">USAJOBS</option>
+  </select>
+
+  <input [(ngModel)]="jobType" name="jobType" placeholder="Job Type" class="input-style" />
+  <input [(ngModel)]="tags" name="tags" placeholder="Tags (comma-separated)" class="input-style" />
+
+  <input type="number" [(ngModel)]="salaryMin" name="salaryMin" placeholder="Min Salary" class="input-style" />
+  <input type="number" [(ngModel)]="salaryMax" name="salaryMax" placeholder="Max Salary" class="input-style" />
+
+  <input type="number" [(ngModel)]="daysPosted" name="daysPosted" placeholder="Posted in last (days)" class="input-style" />
+
+  <select [(ngModel)]="sortBy" name="sortBy" class="input-style">
+    <option value="created">Sort by Date</option>
+    <option value="salary">Sort by Salary</option>
+  </select>
+
+  <select [(ngModel)]="sortOrder" name="sortOrder" class="input-style">
+    <option value="desc">Descending</option>
+    <option value="asc">Ascending</option>
+  </select>
+
+  <button type="submit" class="col-span-full md:col-span-1 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+    🔍 Search
+  </button>
+</form>
+
+<!-- Job Cards -->
+<div class="grid gap-6">
+  <app-job-card *ngFor="let job of jobs" [job]="job"></app-job-card>
+</div>
+
+<!-- Pagination -->
+<div class="flex justify-center gap-4 mt-10 text-sm">
+  <button (click)="goToPage(page - 1)" [disabled]="page <= 1"
+          class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50">
+    ◀ Prev
+  </button>
+  <span class="self-center font-medium">Page {{ page }} / {{ totalPages }}</span>
+  <button (click)="goToPage(page + 1)" [disabled]="page >= totalPages"
+          class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50">
+    Next ▶
+  </button>
+</div>
