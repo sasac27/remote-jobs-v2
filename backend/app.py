@@ -41,26 +41,20 @@ def create_app():
     csrf.init_app(app)
     limiter.init_app(app)
 
-    #Load CORS origin
     ALLOWED_ORIGIN = os.getenv("CORS_ORIGIN", "https://remote-jobs-v2-1.onrender.com")
-
-    # Enable CORS for frontend requests (Angular)
     CORS(app, supports_credentials=True, origins=[ALLOWED_ORIGIN])
 
-
-    # Exempt CSRF for API routes
     csrf.exempt(api_auth_bp)
     csrf.exempt(sub_bp)
     csrf.exempt(jobs_bp)
     csrf.exempt(dashboard_bp)
 
-    # Register all route blueprints
     register_routes(app)
 
     @app.route("/")
     def index():
         return redirect(url_for("api.api_get_jobs"))
-    
+
     @app.before_request
     def log_request_headers():
         from flask import request
@@ -69,9 +63,14 @@ def create_app():
         print("Path:", request.path)
         for header, value in request.headers.items():
             print(f"{header}: {value}")
-            
-    
+
+    # ✅ Trigger job fetch once on startup
+    with app.app_context():
+        print("[Render Boot] Running fetch_and_store_jobs() once")
+        fetch_and_store_jobs()
+
     return app
+
 
 # Initialize app
 app = create_app()
@@ -101,6 +100,5 @@ def inject_now():
 
 # Run server
 if __name__ == "__main__":
-    fetch_and_store_jobs()
     app.run(host="0.0.0.0", port=5000)
     app.run(debug=True)
