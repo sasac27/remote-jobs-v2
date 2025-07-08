@@ -92,3 +92,23 @@ def dashboard():
 
     finally:
         session.close()
+
+
+@dashboard_bp.route("/admin/clear-db", methods=["POST"])
+@jwt_required()
+def clear_db():
+    user_email = get_jwt_identity()
+    
+    # Optional: protect this route by limiting to a known admin email
+    if user_email != "aaroncasas27@outlook.com":
+        return jsonify({"error": "Unauthorized"}), 403
+
+    session = SessionLocal()
+    try:
+        session.execute("TRUNCATE TABLE job_posts, subscriptions, users RESTART IDENTITY CASCADE;")
+        session.commit()
+        return jsonify({"status": "Database cleared."}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        session.close()

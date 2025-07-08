@@ -1,3 +1,4 @@
+#backend/utils/job_hash.py
 import hashlib
 
 def generate_job_hash(title, company, created_at):

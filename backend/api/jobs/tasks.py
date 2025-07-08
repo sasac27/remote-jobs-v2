@@ -3,27 +3,29 @@ from backend.api.jobs.adzuna import get_all_adzuna_jobs
 from backend.api.jobs.remotive import get_remotive_jobs
 from backend.api.jobs.usajobs import get_usajobs_jobs, normalize_usajobs, deduplicate_usajobs
 from backend.utils.utils import normalize_job
-from hashlib import sha256
+from backend.utils.job_hash import generate_job_hash
 from collections import Counter
 import traceback
+from datetime import datetime
 
 def fetch_and_store_jobs():
     session = SessionLocal()
     try:
-        seen_hashes = set()
+        seen_hashes = set(h[0] for h in session.query(JobPost.hash).all())
         unique_jobs = []
 
         # --- Fetch jobs from Adzuna ---
         adzuna_jobs = get_all_adzuna_jobs(pages=30)
         for job in adzuna_jobs:
-            url = job.get("url")
-            if not url:
+            if not job.get("title") or not job.get("company"):
                 continue
-            job_hash = sha256(url.encode()).hexdigest()
+            created = job.get("created") or datetime.utcnow().isoformat()
+            job_hash = generate_job_hash(job["title"], job["company"], created)
             if job_hash in seen_hashes:
                 continue
             seen_hashes.add(job_hash)
             job["hash"] = job_hash
+            job["created"] = created
             unique_jobs.append(job)
 
         # --- Fetch jobs from USAJOBS ---
@@ -31,35 +33,38 @@ def fetch_and_store_jobs():
         print(f"[USAJOBS] Raw jobs fetched: {len(raw_usajobs)}")
         raw_usajobs = deduplicate_usajobs(raw_usajobs)
         normalized_usajobs = normalize_usajobs(raw_usajobs)
-        print(f"[USAJOBS] After normalization {len(normalized_usajobs)}")
+        print(f"[USAJOBS] After normalization: {len(normalized_usajobs)}")
 
         for job in normalized_usajobs:
-            url = job.get("url")
-            if not url:
+            if not job.get("title") or not job.get("company"):
                 continue
-            job_hash = sha256(url.encode()).hexdigest()
+            created = job.get("created") or datetime.utcnow().isoformat()
+            job_hash = generate_job_hash(job["title"], job["company"], created)
             if job_hash in seen_hashes:
                 continue
             seen_hashes.add(job_hash)
             job["hash"] = job_hash
+            job["created"] = created
             unique_jobs.append(job)
 
         # --- Fetch jobs from Remotive ---
-        for job in get_remotive_jobs():
-            url = job.get("url")
-            if not url:
+        remotive_jobs = get_remotive_jobs()
+        for job in remotive_jobs:
+            if not job.get("title") or not job.get("company"):
                 continue
-            job_hash = sha256(url.encode()).hexdigest()
+            created = job.get("created") or datetime.utcnow().isoformat()
+            job_hash = generate_job_hash(job["title"], job["company"], created)
             if job_hash in seen_hashes:
                 continue
             seen_hashes.add(job_hash)
             job["hash"] = job_hash
+            job["created"] = created
             unique_jobs.append(job)
 
         print(f"[Fetch] Total unique jobs collected: {len(unique_jobs)}")
 
         # Optional: Print job counts by source
-        source_counts = Counter(job["source"] for job in unique_jobs)
+        source_counts = Counter(job.get("source", "unknown") for job in unique_jobs)
         print("[Sources] Job counts by source:", dict(source_counts))
 
         # --- Store in DB ---
@@ -74,17 +79,16 @@ def fetch_and_store_jobs():
                 post = JobPost(
                     title=job["title"],
                     company=job["company"],
-                    category=job["category"],
-                    job_type=job["job_type"],
-                    location=job["location"][:255],
+                    category=job.get("category"),
+                    job_type=job.get("job_type"),
+                    location=(job.get("location") or "")[:255],
                     salary=job.get("salary"),
                     created_at=job["created"],
-                    url=job["url"],
-                    source=job["source"],
-                    tags=job["tags"],
+                    url=job.get("url"),
+                    source=job.get("source"),
+                    tags=job.get("tags"),
                     hash=job["hash"]
                 )
-
 
                 session.add(post)
                 new_jobs += 1
@@ -93,10 +97,10 @@ def fetch_and_store_jobs():
                 print(f"[Insert Error] Skipped job: {job.get('title')} | Error: {insert_error}")
 
         session.commit()
-        print(f"[Scheduler] Saved {new_jobs} new jobs.")
+        print(f"[Store] Saved {new_jobs} new jobs.")
 
     except Exception as e:
-        print(f"[Scheduler] Error: {e}")
+        print(f"[Fetch Error] {e}")
         traceback.print_exc()
 
     finally:
