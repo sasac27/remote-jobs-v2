@@ -3,12 +3,24 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask_cors import cross_origin
 from backend.models import SessionLocal, JobPost
 from sqlalchemy import func
-from collections import Counter, defaultdict
+from collections import Counter
 from datetime import datetime, timedelta
 import numpy as np
-
+import re
 
 dashboard_bp = Blueprint("dashboard", __name__, url_prefix="/api")
+
+def extract_salary_num(salary_str):
+    if not salary_str:
+        return None
+    try:
+        # Extract first number in the string (handles ranges and text)
+        match = re.search(r"\$?([\d,]+)", salary_str)
+        if match:
+            return float(match.group(1).replace(",", ""))
+    except Exception:
+        pass
+    return None
 
 @dashboard_bp.route("/dashboard")
 @jwt_required()
@@ -30,7 +42,7 @@ def dashboard():
 
         # Top tags
         EXCLUDED_JOB_TYPE_TAGS = {
-        "Full-time", "Part-time", "Flexible", "Seasonal", "Shift", "Other", "Contract", "Internship", "Remote", "Temporary"
+            "Full-time", "Part-time", "Flexible", "Seasonal", "Shift", "Other", "Contract", "Internship", "Remote", "Temporary"
         }
 
         tags_counter = Counter()
@@ -39,14 +51,14 @@ def dashboard():
                 t.strip().lower() for t in (job.tags or [])
                 if isinstance(t, str) and t.strip() and t.strip().lower() not in EXCLUDED_JOB_TYPE_TAGS
             ]
-        tags_counter.update(tags)
+            tags_counter.update(tags)
 
         top_tags = tags_counter.most_common(10)
 
         # Salaries
-        salaries = [float(j.salary.replace("$", "").replace(",", "").split()[0])
-                    for j in session.query(JobPost).filter(JobPost.salary != None).all()
-                    if j.salary and j.salary.startswith("$")]
+        salaries_raw = session.query(JobPost.salary).filter(JobPost.salary != None).all()
+        salaries = [extract_salary_num(j[0]) for j in salaries_raw if extract_salary_num(j[0]) is not None]
+
         salary_coverage = round((len(salaries) / total_jobs) * 100, 1) if total_jobs else 0
         avg_salary = round(np.mean(salaries), 2) if salaries else 0
         salary_histogram = {"bin_edges": [], "counts": []}
@@ -92,5 +104,3 @@ def dashboard():
 
     finally:
         session.close()
-
-
