@@ -63,9 +63,6 @@ def fetch_and_store_jobs():
 
         print(f"[Fetch] Total unique jobs collected: {len(unique_jobs)}")
 
-        # Optional: Print job counts by source
-        source_counts = Counter(job.get("source", "unknown") for job in unique_jobs)
-        print("[Sources] Job counts by source:", dict(source_counts))
 
         # --- Store in DB ---
         new_jobs = 0
