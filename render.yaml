@@ -26,7 +26,7 @@ services:
   # 🌐 Angular Frontend
   - type: static
     name: remote-job-frontend
-    buildCommand: ng build --configuration production
+    buildCommand: ./node_modules/.bin/ng build --configuration production
     staticPublishPath: dist/remote-job-board
     envVars:
       - key: NODE_VERSION
