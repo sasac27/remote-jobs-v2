@@ -5,7 +5,7 @@ import { ChartData, ChartOptions } from 'chart.js';
 import { DashboardData } from './dashboard.types';
 import { CommonModule } from '@angular/common';
 import { NgChartsModule } from 'ng2-charts';
-import { environment } from '../../../../environment';
+import { environment } from '../../../environment/environment';
 
 @Component({
   selector: 'app-dashboard',
