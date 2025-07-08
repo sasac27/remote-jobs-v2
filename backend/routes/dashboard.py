@@ -6,7 +6,6 @@ from sqlalchemy import func
 from collections import Counter, defaultdict
 from datetime import datetime, timedelta
 import numpy as np
-import re
 
 
 dashboard_bp = Blueprint("dashboard", __name__, url_prefix="/api")
@@ -31,7 +30,7 @@ def dashboard():
 
         # Top tags
         EXCLUDED_JOB_TYPE_TAGS = {
-            "Full-time", "Part-time", "Flexible", "Seasonal", "Shift", "Other", "Contract", "Internship", "Remote", "Temporary"
+        "Full-time", "Part-time", "Flexible", "Seasonal", "Shift", "Other", "Contract", "Internship", "Remote", "Temporary"
         }
 
         tags_counter = Counter()
@@ -40,18 +39,14 @@ def dashboard():
                 t.strip().lower() for t in (job.tags or [])
                 if isinstance(t, str) and t.strip() and t.strip().lower() not in EXCLUDED_JOB_TYPE_TAGS
             ]
-            tags_counter.update(tags)
+        tags_counter.update(tags)
 
         top_tags = tags_counter.most_common(10)
 
-        # Salary analytics
-        raw_salaries = session.query(JobPost.salary).filter(JobPost.salary != None).all()
-        salaries = []
-        for j in raw_salaries:
-            val = extract_numeric_salary(j.salary)
-            if val is not None:
-                salaries.append(val)
-
+        # Salaries
+        salaries = [float(j.salary.replace("$", "").replace(",", "").split()[0])
+                    for j in session.query(JobPost).filter(JobPost.salary != None).all()
+                    if j.salary and j.salary.startswith("$")]
         salary_coverage = round((len(salaries) / total_jobs) * 100, 1) if total_jobs else 0
         avg_salary = round(np.mean(salaries), 2) if salaries else 0
         salary_histogram = {"bin_edges": [], "counts": []}
@@ -62,7 +57,7 @@ def dashboard():
                 "counts": counts.tolist()
             }
 
-        # Job posting trend
+        # Job posting trend (per day)
         trend_counter = Counter()
         jobs = session.query(JobPost.created_at).all()
         for (created_at,) in jobs:
@@ -97,15 +92,3 @@ def dashboard():
 
     finally:
         session.close()
-
-
-def extract_numeric_salary(salary_str):
-    """Extract the first numeric value from a salary string like '$50k - $70k'"""
-    if not salary_str:
-        return None
-    salary_str = salary_str.replace(",", "")
-    match = re.search(r"\$?(\d+(?:\.\d+)?)", salary_str)
-    if match:
-        return float(match.group(1))
-    return None
-
