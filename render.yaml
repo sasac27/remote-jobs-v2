@@ -1,4 +1,5 @@
 services:
+  # 🚀 Flask Backend
   - type: web
     name: remote-job-backend
     env: python
@@ -7,3 +8,26 @@ services:
     envVars:
       - key: FLASK_ENV
         value: production
+      - key: ADZUNA_API_ID
+        value: 2de9627f
+      - key: ADZUNA_API_KEY
+        value: 428a6946bf44389042e2466e5926c1dc
+      - key: JWT_SECRET_KEY
+        value: Momoeazye27!!
+      - key: CORS_ORIGIN
+        value: https://remote-job-frontend.onrender.com
+      - key: USAJOBS_USER_AGENT
+        value: aaroncasas27@outlook.com
+      - key: USAJOB_API_KEY
+        value: C/yGpnD4fOfQ/nxNZ9MJCTCQra3NbYOD6GrQk7/90Dw=
+      - key: DATABASE_URL
+        value: postgresql://remote_jobs_db_9hiz_user:O4vGciIS8VF4BAN8CxkFrkUVBW5NBP70@dpg-d1evr2vdiees73ag05m0-a/remote_jobs_db_9hiz
+
+  # 🌐 Angular Frontend
+  - type: static
+    name: remote-job-frontend
+    buildCommand: ng build --configuration production
+    staticPublishPath: dist/remote-job-board
+    envVars:
+      - key: NODE_VERSION
+        value: 18
