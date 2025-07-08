@@ -14,12 +14,18 @@ def extract_salary_num(salary_str):
     if not salary_str:
         return None
     try:
-        # Extract first number in the string (handles ranges and text)
-        match = re.search(r"\$?([\d,]+)", salary_str)
+        # Normalize
+        salary_str = salary_str.lower().replace(",", "").strip()
+        
+        # Match formats like "$85k", "120000", "$70,000/year", "USD 100k"
+        match = re.search(r'(\d+(?:\.\d+)?)(k)?', salary_str)
         if match:
-            return float(match.group(1).replace(",", ""))
-    except Exception:
-        pass
+            amount = float(match.group(1))
+            if match.group(2):  # if "k" was present
+                amount *= 1000
+            return amount
+    except Exception as e:
+        print(f"[PARSE ERROR] {salary_str} → {e}")
     return None
 
 @dashboard_bp.route("/dashboard")
@@ -58,6 +64,8 @@ def dashboard():
         # Salaries
         salaries_raw = session.query(JobPost.salary).filter(JobPost.salary != None).all()
         salaries = [extract_salary_num(j[0]) for j in salaries_raw if extract_salary_num(j[0]) is not None]
+        print("[DEBUG] Raw salaries:", salaries_raw[:5])
+        print("[DEBUG] Parsed salaries:", salaries[:5])
 
         salary_coverage = round((len(salaries) / total_jobs) * 100, 1) if total_jobs else 0
         avg_salary = round(np.mean(salaries), 2) if salaries else 0
