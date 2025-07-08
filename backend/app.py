@@ -68,7 +68,7 @@ def create_app():
     with app.app_context():
         print("[Render Boot] Running fetch_and_store_jobs() once")
         fetch_and_store_jobs()
-
+    fetch_and_store_jobs()
     return app
 
 
