@@ -31,7 +31,7 @@ def dashboard():
 
         # Top tags
         EXCLUDED_JOB_TYPE_TAGS = {
-        "Full-time", "Part-time", "Flexible", "Seasonal", "Shift", "Other", "Contract", "Internship", "Remote", "Temporary"
+            "Full-time", "Part-time", "Flexible", "Seasonal", "Shift", "Other", "Contract", "Internship", "Remote", "Temporary"
         }
 
         tags_counter = Counter()
@@ -40,12 +40,17 @@ def dashboard():
                 t.strip().lower() for t in (job.tags or [])
                 if isinstance(t, str) and t.strip() and t.strip().lower() not in EXCLUDED_JOB_TYPE_TAGS
             ]
-        tags_counter.update(tags)
+            tags_counter.update(tags)
 
         top_tags = tags_counter.most_common(10)
 
+        # Salary analytics
         raw_salaries = session.query(JobPost.salary).filter(JobPost.salary != None).all()
-        salaries = [extract_numeric_salary(j.salary) for j in raw_salaries if extract_numeric_salary(j.salary) is not None]
+        salaries = []
+        for j in raw_salaries:
+            val = extract_numeric_salary(j.salary)
+            if val is not None:
+                salaries.append(val)
 
         salary_coverage = round((len(salaries) / total_jobs) * 100, 1) if total_jobs else 0
         avg_salary = round(np.mean(salaries), 2) if salaries else 0
@@ -57,7 +62,7 @@ def dashboard():
                 "counts": counts.tolist()
             }
 
-        # Job posting trend (per day)
+        # Job posting trend
         trend_counter = Counter()
         jobs = session.query(JobPost.created_at).all()
         for (created_at,) in jobs:
@@ -92,7 +97,6 @@ def dashboard():
 
     finally:
         session.close()
-
 
 
 def extract_numeric_salary(salary_str):
