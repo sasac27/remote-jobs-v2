@@ -11,11 +11,6 @@ import numpy as np
 dashboard_bp = Blueprint("dashboard", __name__, url_prefix="/api")
 
 @dashboard_bp.route("/dashboard")
-@cross_origin(
-    origins="https://remote-jobs-v2-1.onrender.com",
-    supports_credentials=True
-)
-
 @jwt_required()
 def dashboard():
     user_email = get_jwt_identity()
