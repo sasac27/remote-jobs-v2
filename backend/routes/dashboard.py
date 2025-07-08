@@ -6,6 +6,7 @@ from sqlalchemy import func
 from collections import Counter, defaultdict
 from datetime import datetime, timedelta
 import numpy as np
+import re
 
 
 dashboard_bp = Blueprint("dashboard", __name__, url_prefix="/api")
@@ -43,10 +44,9 @@ def dashboard():
 
         top_tags = tags_counter.most_common(10)
 
-        # Salaries
-        salaries = [float(j.salary.replace("$", "").replace(",", "").split()[0])
-                    for j in session.query(JobPost).filter(JobPost.salary != None).all()
-                    if j.salary and j.salary.startswith("$")]
+        raw_salaries = session.query(JobPost.salary).filter(JobPost.salary != None).all()
+        salaries = [extract_numeric_salary(j.salary) for j in raw_salaries if extract_numeric_salary(j.salary) is not None]
+
         salary_coverage = round((len(salaries) / total_jobs) * 100, 1) if total_jobs else 0
         avg_salary = round(np.mean(salaries), 2) if salaries else 0
         salary_histogram = {"bin_edges": [], "counts": []}
@@ -92,3 +92,16 @@ def dashboard():
 
     finally:
         session.close()
+
+
+
+def extract_numeric_salary(salary_str):
+    """Extract the first numeric value from a salary string like '$50k - $70k'"""
+    if not salary_str:
+        return None
+    salary_str = salary_str.replace(",", "")
+    match = re.search(r"\$?(\d+(?:\.\d+)?)", salary_str)
+    if match:
+        return float(match.group(1))
+    return None
+

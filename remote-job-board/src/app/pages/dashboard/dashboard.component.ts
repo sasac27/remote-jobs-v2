@@ -56,8 +56,9 @@ export class DashboardComponent implements OnInit {
         this.user = data.user;
         this.totalJobs = data.total_jobs;
         this.averageSalary = data.average_salary;
-        this.recentWeekCount = data.recent_week_count;
-        this.recentMonthCount = data.recent_month_count;
+        this.recentWeekCount = data.jobs_this_week;
+        this.recentMonthCount = data.jobs_this_month;
+
         this.setupCharts(data);
         this.loading = false;
       });
@@ -122,7 +123,7 @@ export class DashboardComponent implements OnInit {
     };
 
     // Common Tags
-    const tags = data.common_tags ?? [];
+    const tags = data.top_tags ?? [];
     this.commonTagsChartData = {
       labels: tags.map(t => t.label),
       datasets: [{ data: tags.map(t => t.count), label: 'Common Tags' }]
