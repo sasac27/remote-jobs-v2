@@ -64,10 +64,8 @@ def create_app():
         for header, value in request.headers.items():
             print(f"{header}: {value}")
 
-    # ✅ Trigger job fetch once on startup
-    with app.app_context():
-        print("[Render Boot] Running fetch_and_store_jobs() once")
-        fetch_and_store_jobs()
+
+    print("[Render Boot] Running fetch_and_store_jobs() once")
     fetch_and_store_jobs()
     return app
 
